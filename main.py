@@ -1,12 +1,28 @@
 import codecs
-from liwc import Liwc
 
-#Hay que sacar todos los que no tengan temas de interacción social y
-#lwic = Liwc("dataSource/Spanish_LIWC2007_Dictionary.dic")
+class Palabra:
+    valor = ''
+    categoria = []
 
-#print(lwic.search("crear"))
-#print(lwic.categories)
+def limpiarCategoria(LineaCategoria):
+    listaCategoria = LineaCategoria.split("\t")
+    palabra = Palabra()
+    palabra.valor = listaCategoria.pop(0)
+    palabra.categoria = listaCategoria
+    return palabra
+
+def obtenerPalabras(archivoDiv):
+    diccionarioSinFunciones = archivoDiv.split("%")[2].splitlines()
+    for linea in diccionarioSinFunciones:
+        if linea != "":
+            if "*" in linea:
+                palabraWildCard = limpiarCategoria(linea)
+                print(palabraWildCard.valor,palabraWildCard.categoria)
+            else:
+                palabra = limpiarCategoria(linea)
+    return
 
 
 f = codecs.open("dataSource/Spanish_LIWC2007_Dictionary.dic","r","utf-8")
-print(f.read())
+#121 social, 125 afect
+obtenerPalabras(f.read())
