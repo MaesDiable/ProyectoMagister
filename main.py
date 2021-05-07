@@ -42,24 +42,21 @@ def getwords(archivoDiv, option):
 def encoderword(word):
     return {'valor': word.valor, 'classification': word.classification}
 
-def sendListDataBase(wordlist):
+
+def sendListDataBase(wordlist, opcion):
     column = ConnectionMongoDb.Connection()["word"]
     listtosend = [{}]
     for word in wordlist:
         value = json.dumps(word, default=encoderword)
-        listtosend.append(value)
-    for asd in listtosend:
-        print(asd)
-        #listtosend.append(value)
-    #value = json.dumps(value)
-    column.insert_many(listtosend)
-    # column = ConnectionMongoDb.Connection()["wordwild"]
-    # column.insert_many(dictionarywordswild)
-    ##value = json.dumps(word)
-    # column.insert(word)
+        valor = json.loads(value)
+        listtosend.append(valor)
+    if opcion == 0:
+        column = ConnectionMongoDb.Connection()["word"]
+        column.insert_many(listtosend)
+    elif opcion == 1:
+        column = ConnectionMongoDb.Connection()["wordwild"]
+        column.insert_many(listtosend)
     return 0
-
-
 
 
 # 121 social, 125 afect
@@ -68,9 +65,7 @@ def main():
     g = codecs.open("dataSource/Spanish_LIWC2007_Dictionary.dic", "r", "utf-8")
     commonwords = getwords(f.read(), 1)
     wildwords = getwords(g.read(), 2)
-    sendListDataBase(commonwords)
-    #sendListDataBase(wildwords)
-
-
+    sendListDataBase(commonwords, 0)
+    sendListDataBase(wildwords, 1)
 
 main()
